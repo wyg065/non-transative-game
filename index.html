@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<body>
+
+<div class="flex h-screen">
+  <div class="m-auto" id ="body">
+	<span class="font-semibold text-4xl tracking-tight underline ">Penney's Game Example</span>
+	<br>
+	<p>this game seems fair, but is certainly not.</p>
+	<p>psuedo random number generation "flips" the coin.</p>
+	<p>because the game is non transative, you will eventually lose.</p>
+	<br>
+	<br>
+	<br>
+	<br>
+	<span class="font-semibold text-xl tracking-tight">1) You choose 3 coin toss outcomes</span>
+	<p> example: H,T,T</p>
+	<br>
+	<br>
+	<br>
+	<br>
+	<span class="font-semibold text-xl tracking-tight">2) The computer will then choose 3 outcomes.</span>
+	<p> example: T,T,H</p>
+	<br>
+	<br>
+	<br>
+	<br>
+	<span class="font-semibold text-xl tracking-tight">3) A simulated coin toss will begin</span>
+	<p>&nbsp;</p>
+	<br>
+	<br>
+	<br>
+	<br>
+	<span class="font-semibold text-xl tracking-tight">4) See if your pattern appears before the computer's.</span>
+	<br>
+	<br>
+	<br>
+	<br>
+	<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="begin">
+	  Begin
+	</button>
+	
+	
+</div>
+</div>
+
+<script>
+	let playewins=0,pcwins=0;const page2='<span class="font-semibold text-xl tracking-tight">Please click the buttons below a total of 3 times. </span><br><br><button class="flex-shrink-0 bg-orange-500 hover:bg-orange-700 border-orange-500 hover:border-orange-700 text-sm border-4 text-white py-1 px-2 rounded" type="button" id="heads">Heads</button>&nbsp;<button class="w-128 flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="button" id="tails">Tails</button><br><br><span class="font-semibold text-xl tracking-tight" id="p1pattern">&nbsp;</span>',page3='<span class="font-semibold text-xl tracking-tight">The computer will now choose</span><br><br><button class="flex-shrink-0 bg-orange-500 hover:bg-orange-700 border-orange-500 hover:border-orange-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">Heads</button>&nbsp;<button class="w-128 flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">Tails</button><br><br><span class="font-semibold text-xl tracking-tight" id="pcpattern" >&nbsp;</span>',page4='<span class="font-semibold text-xl tracking-tight" id="score">wins 0&nbsp;&nbsp;&nbsp;loses 0&nbsp;&nbsp;&nbsp;win percentage: 0%</span><br><br><span class="font-semibold text-xl tracking-tight">you choose p1guess. the computer choose pcguess.</span><br><br><span class="font-semibold text-xl tracking-tight">Now lets start flipping!</span><br><br><span class="font-semibold text-xl tracking-tight" id="flips1">&nbsp;</span>';let p1guess="",pcguess="";document.querySelector("#begin").addEventListener("click",function(){$("#body").fadeOut("slow",function(){document.querySelector("#body").innerHTML=page2,$("#body").fadeIn("slow")})},!1),document.addEventListener("click",function(e){e.target&&"tails"==e.target.id&&(document.querySelector("#p1pattern").innerHTML=document.querySelector("#p1pattern").innerHTML+"T "),e.target&&"heads"==e.target.id&&(document.querySelector("#p1pattern").innerHTML=document.querySelector("#p1pattern").innerHTML+"H "),document.querySelector("#p1pattern")&&12===document.querySelector("#p1pattern").innerHTML.length&&("H"===(p1guess=document.querySelector("#p1pattern").innerHTML.replace(/[^HT]/g,""))[1]&&(pcguess="T"+p1guess[0]+p1guess[1]),"T"===p1guess[1]&&(pcguess="H"+p1guess[0]+p1guess[1]),$("#heads").prop("disabled",!0),$("#tails").prop("disabled",!0),$("#body").fadeOut("slow",function(){document.querySelector("#body").innerHTML=page3,$("#body").fadeIn("slow"),setTimeout(()=>{document.querySelector("#pcpattern").innerHTML+=pcguess[0]+" ",setTimeout(()=>{document.querySelector("#pcpattern").innerHTML+=pcguess[1]+" ",setTimeout(()=>{document.querySelector("#pcpattern").innerHTML+=pcguess[2],$("#body").fadeOut("slow",function(){p1guess=p1guess[0]+" "+p1guess[1]+" "+p1guess[2],pcguess=pcguess[0]+" "+pcguess[1]+" "+pcguess[2],document.querySelector("#body").innerHTML=page4.replace("pcguess",pcguess).replace("p1guess",p1guess),$("#body").fadeIn("slow"),flipCount=1;setInterval(()=>{const e="HT".length;if(document.querySelector("#flips"+flipCount).innerHTML+="HT".charAt(Math.floor(Math.random()*e)),document.querySelector("#flips"+flipCount).innerHTML.includes(p1guess)){console.log("player wins");const e=document.querySelector("#flips"+flipCount).innerHTML.length,n=document.querySelector("#flips"+flipCount).innerHTML.slice(0,e-5);document.querySelector("#flips"+flipCount).innerHTML=n+'<span class="text-green-500">'+p1guess+"</span> You are correct.",flipCount+=1,playewins++,document.querySelector("#body").innerHTML+='<br><br><span class="font-semibold text-xl tracking-tight" id="flips'+flipCount+'">';const t="wins playewins&nbsp;&nbsp;&nbsp;loses pcwins&nbsp;&nbsp;&nbsp;win percentage: dragon",s=playewins/(pcwins+playewins)*100+"%";document.querySelector("#score").innerHTML=t.replace("playewins",playewins).replace("pcwins",pcwins).replace("dragon",s.slice(0,4))}if(document.querySelector("#flips"+flipCount).innerHTML.includes(pcguess)){console.log("pc wins");const e=document.querySelector("#flips"+flipCount).innerHTML.length,n=document.querySelector("#flips"+flipCount).innerHTML.slice(0,e-5);document.querySelector("#flips"+flipCount).innerHTML=n+'<span class="text-red-500">'+pcguess+"</span> Computer is correct.",flipCount+=1,pcwins++,document.querySelector("#body").innerHTML+='<br><br><span class="font-semibold text-xl tracking-tight" id="flips'+flipCount+'">';const t="wins playewins&nbsp;&nbsp;&nbsp;loses pcwins&nbsp;&nbsp;&nbsp;win percentage: dragon",s=playewins/(pcwins+playewins)*100+"%";document.querySelector("#score").innerHTML=t.replace("playewins",playewins).replace("pcwins",pcwins).replace("dragon",s.slice(0,4))}document.querySelector("#flips"+flipCount).innerHTML+=" "},1e3)})},750)},750)},750)}))});
+</script>
+</body>
+</html>
